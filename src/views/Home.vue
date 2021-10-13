@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Inbox</ion-title>
+        <ion-title>Codebrains Todos</ion-title>
       </ion-toolbar>
     </ion-header>
     
@@ -13,12 +13,13 @@
       
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Inbox</ion-title>
+          <ion-title size="large">Codebrains Todos</ion-title>
         </ion-toolbar>
       </ion-header>
       
+      <TodoForm />
       <ion-list>
-        <MessageListItem v-for="message in messages" :key="message.id" :message="message" />
+        <TodoListItem v-for="todo in todos" :key="todo.id" :todo="todo"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -26,10 +27,11 @@
 
 <script lang="ts">
 import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/vue';
-import MessageListItem from '@/components/MessageListItem.vue';
-import { defineComponent } from 'vue';
+import TodoListItem from '@/components/TodoListItem.vue';
+import TodoForm from '@/components/TodoForm.vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { getMessages } from '@/data/messages';
-
+import { findAllTodos } from '@/data/todos';
 export default defineComponent({
   name: 'Home',
   data() {
@@ -53,7 +55,26 @@ export default defineComponent({
     IonRefresherContent,
     IonTitle,
     IonToolbar,
-    MessageListItem
+    TodoListItem,
+    TodoForm
   },
+  setup() {
+    /*const todos = ref([]);
+    const response = await findAllTodos();
+    todos.value = response.data;
+    
+    return {
+      todos
+    }*/
+    const todos = ref([]);
+    onMounted(async () => {
+      const response = await findAllTodos();
+      todos.value = response.data;
+    });
+
+    return {
+      todos
+    }
+  }
 });
 </script>
