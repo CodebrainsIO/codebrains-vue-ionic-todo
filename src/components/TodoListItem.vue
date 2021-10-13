@@ -6,8 +6,8 @@
         {{ todo.title }}
       </h2>
     </ion-label>
-    <ion-toggle :checked="todo.completed"></ion-toggle>
-    <ion-button color="danger">X</ion-button>
+    <ion-toggle :checked="todo.completed" @ionChange="update()"></ion-toggle>
+    <ion-button color="danger" @click="deleteTodoItem()">X</ion-button>
   </ion-item>
 </template>
 
@@ -16,7 +16,6 @@ import { IonItem, IonLabel, IonButton, IonToggle } from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "TodoListItem",
   components: {
     IonItem,
     IonLabel,
@@ -25,13 +24,26 @@ export default defineComponent({
   },
   props: {
     todo: Object,
+    updateStatus: {
+      type: Function,
+      required: true,
+    },
+    deleteTodo: {
+      type: Function,
+      required: true,
+    },
   },
-  setup() {
-    const clickedStar = () => {
-      console.log("Star clicked!");
+  setup(props) {
+
+    const update = () => {
+      props.updateStatus(props.todo);
     };
 
-    return { clickedStar }
+    const deleteTodoItem = () => {
+      props.deleteTodo(props.todo);
+    }
+
+    return { update, deleteTodoItem };
   },
 });
 </script>
