@@ -17,9 +17,9 @@
         </ion-toolbar>
       </ion-header>
       
-      <TodoForm />
+      <TodoForm :submitTodo="submitTodo"/>
       <ion-list>
-        <TodoListItem v-for="todo in todos" :key="todo.id" :todo="todo"/>
+        <TodoListItem v-for="todo in todos" :key="todo.id" :todo="todo" :updateStatus="updateStatus"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -31,7 +31,7 @@ import TodoListItem from '@/components/TodoListItem.vue';
 import TodoForm from '@/components/TodoForm.vue';
 import { defineComponent, onMounted, ref } from 'vue';
 import { getMessages } from '@/data/messages';
-import { findAllTodos } from '@/data/todos';
+import { findAllTodos, createTodo, updateTodo, deleteTodo } from '@/data/todos';
 export default defineComponent({
   name: 'Home',
   data() {
@@ -72,8 +72,28 @@ export default defineComponent({
       todos.value = response.data;
     });
 
+    const submitTodo = async (todo: any) => {
+      console.log('Submit Todo', todo);
+      await createTodo(todo);
+      const response = await findAllTodos();
+      todos.value = response.data;
+    }
+
+    const updateStatus = async (todo: any) => {
+      await updateTodo(todo);
+      const response = await findAllTodos();
+      todos.value = response.data;
+    }
+    const deleteTodoItem = async (todo: any) => {
+      await deleteTodo(todo.id)
+      const response = await findAllTodos();
+      todos.value = response.data;
+    }
     return {
-      todos
+      todos,
+      submitTodo,
+      updateStatus,
+      deleteTodoItem
     }
   }
 });

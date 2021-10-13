@@ -29,11 +29,17 @@ export default defineComponent({
         IonInput,
         IonButton
     },
-    setup(){
+    props: {
+        submitTodo: {
+            type: Function,
+            required: true
+        }
+    },
+    setup(props){
         const title = ref('');
         const onSubmit = (event: any) => {
-            event.preventDefault();
             console.log("Submit", title.value);
+            props.submitTodo({title: title.value, completed: false})
             title.value = '';
         }
 
